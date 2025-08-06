@@ -33,12 +33,13 @@
   "files": [
     "src/**/*",
     "dist/**/*",
+    "scripts/**/*",
     "lib/**/*.node"
   ],
   "gypfile": true,
   "binary": {
     "module_name": "node_win_pcap",
-    "module_path": "./lib/binding/{node_abi}-{platform}-{arch}",
+    "module_path": "./lib/binding/{platform}-{arch}",
     "host": "https://github.com/izure1/node-win-pcap/releases/download/",
     "remote_path": "v{version}"
   },

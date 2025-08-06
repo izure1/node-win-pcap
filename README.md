@@ -65,7 +65,7 @@ pcap.on('error', (error) => {
 
 try {
   // Start packet capture (without filters)
-  pcap.start();
+  pcap.start('1.2.3.4', '5.6.7.8');
   console.log(`Packet sniffing started on ${pcap.ipAddress}...`);
 
   // Start capture with specific IP address filters
