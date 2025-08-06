@@ -1,6 +1,6 @@
 {
   "name": "node-win-pcap",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Node.js binding for windows packet sniffing",
   "type": "commonjs",
   "main": "./src/index.js",
@@ -40,7 +40,7 @@
   "gypfile": true,
   "binary": {
     "module_name": "node_win_pcap",
-    "module_path": "./lib/binding/{platform}-{arch}",
+    "module_path": "./lib/binding/{node_abi}-{platform}-{arch}",
     "host": "https://github.com/izure1/node-win-pcap/releases/download/",
     "remote_path": "v{version}"
   },
