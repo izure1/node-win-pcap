@@ -17,6 +17,7 @@
     "install": "node-pre-gyp install --fallback-to-build",
     "rebuild": "node-pre-gyp rebuild --fallback-to-build",
     "postrebuild": "node scripts/copy-binary.js",
+    "package": "npx node-pre-gyp package",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublishOnly": "npm install && node-pre-gyp clean && node-pre-gyp build --compile --target_platform=win32 --target_arch=x64",
     "build-debug": "node-gyp build --debug"
