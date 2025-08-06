@@ -8,14 +8,14 @@ This project is inspired by [raw-socket-sniffer](https://github.com/nospaceships
 
 ## Key Features
 
--   **No External Dependencies:** No need to install drivers like WinPcap or Npcap.
--   **Simplicity:** Operates simply and lightly by directly using Windows APIs.
--   **IP Filtering:** Capable of filtering packets based on source and destination IP addresses.
+- **No External Dependencies:** No need to install drivers like WinPcap or Npcap.
+- **Simplicity:** Operates simply and lightly by directly using Windows APIs.
+- **IP Filtering:** Capable of filtering packets based on source and destination IP addresses.
 
 ## Requirements
 
--   Windows operating system
--   Administrator privileges (required for packet capture)
+- Windows operating system
+- Administrator privileges (required for packet capture)
 
 ## Installation
 
@@ -81,6 +81,25 @@ setTimeout(() => {
   pcap.stop();
   console.log('Packet sniffing stopped.');
 }, 10000);
+```
+
+## Packet Structure
+
+Captured packets are returned as an object conforming to the following TypeScript interface:
+
+```typescript
+interface NodeWinPcapPacket {
+  data: Buffer;
+  length: number;
+  ipHeader: {
+    sourceIP: string;
+    destIP: string;
+    headerLength: number;
+    protocol: number;
+    sourcePort: number;
+    destPort: number;
+  };
+}
 ```
 
 ## License
