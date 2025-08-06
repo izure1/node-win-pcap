@@ -1,0 +1,88 @@
+# node-win-pcap
+
+[![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+`node-win-pcap` is a Node.js packet capture module exclusively for the Windows operating system. It captures network packets using Windows' built-in functionalities without requiring separate external programs (e.g., Npcap, WinPcap).
+
+This project is inspired by [raw-socket-sniffer](https://github.com/nospaceships/raw-socket-sniffer).
+
+## Key Features
+
+-   **No External Dependencies:** No need to install drivers like WinPcap or Npcap.
+-   **Simplicity:** Operates simply and lightly by directly using Windows APIs.
+-   **IP Filtering:** Capable of filtering packets based on source and destination IP addresses.
+
+## Requirements
+
+-   Windows operating system
+-   Administrator privileges (required for packet capture)
+
+## Installation
+
+```bash
+npm install node-win-pcap
+```
+
+## Usage
+
+The following is a basic example of binding to a specific network interface's IP address and capturing packets.
+
+```javascript
+const { NodeWinPcap } = require('node-win-pcap');
+
+// If ipAddress is omitted, it will automatically be set to the first available IP address.
+// To use a specific interface, pass its IP address (e.g., '192.168.0.10').
+const pcap = new NodeWinPcap();
+
+// Set up 'packet' event listener
+pcap.on('packet', (packet) => {
+  console.log('--- New Packet ---');
+  console.log('Packet Length:', packet.length);
+  
+  // Print IP header information
+  const ipHeader = packet.ipHeader;
+  if (ipHeader) {
+    console.log(`Source IP: ${ipHeader.sourceIP}`);
+    console.log(`Destination IP: ${ipHeader.destIP}`);
+    console.log(`Protocol: ${ipHeader.protocol}`);
+    if (ipHeader.protocol === NodeWinPcap.Protocol.TCP) {
+      console.log('  (TCP Protocol)');
+    } else if (ipHeader.protocol === NodeWinPcap.Protocol.UDP) {
+      console.log('  (UDP Protocol)');
+    }
+    console.log(`Source Port: ${ipHeader.sourcePort}`);
+    console.log(`Destination Port: ${ipHeader.destPort}`);
+  }
+
+  // Full packet data (Buffer)
+  // console.log('Packet Data:', packet.data);
+});
+
+// Set up 'error' event listener
+pcap.on('error', (error) => {
+  console.error('An error occurred:', error);
+});
+
+try {
+  // Start packet capture (without filters)
+  pcap.start();
+  console.log(`Packet sniffing started on ${pcap.ipAddress}...`);
+
+  // Start capture with specific IP address filters
+  // pcap.start('1.2.3.4', '5.6.7.8'); // sourceIP: 1.2.3.4, destIP: 5.6.7.8
+  // console.log('Packet sniffing started with IP filters...');
+
+} catch (e) {
+  console.error(`Failed to start sniffing: ${e.message}`);
+}
+
+// Stop capture after 10 seconds
+setTimeout(() => {
+  pcap.stop();
+  console.log('Packet sniffing stopped.');
+}, 10000);
+```
+
+## License
+
+[MIT](LICENSE)

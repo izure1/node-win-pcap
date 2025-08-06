@@ -1,0 +1,57 @@
+{
+  "name": "node-win-pcap",
+  "version": "0.0.1",
+  "description": "Node.js binding for windows packet sniffing",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "require": "./src/index.js"
+    }
+  },
+  "scripts": {
+    "install": "node-pre-gyp install --fallback-to-build",
+    "rebuild": "node-pre-gyp rebuild --fallback-to-build",
+    "postrebuild": "node scripts/copy-binary.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "npm install && node-pre-gyp clean && node-pre-gyp build --compile --target_platform=win32 --target_arch=x64",
+    "build-debug": "node-gyp build --debug"
+  },
+  "dependencies": {
+    "@mapbox/node-pre-gyp": "^2.0.0",
+    "bindings": "^1.5.0",
+    "node-addon-api": "^7.0.0"
+  },
+  "devDependencies": {
+    "node-abi": "^4.12.0",
+    "node-gyp": "^11.3.0"
+  },
+  "files": [
+    "src/**/*",
+    "dist/**/*",
+    "lib/**/*.node"
+  ],
+  "gypfile": true,
+  "binary": {
+    "module_name": "node_win_pcap",
+    "module_path": "./lib/binding/{node_abi}-{platform}-{arch}",
+    "host": "https://github.com/izure1/node-win-pcap/releases/download/",
+    "remote_path": "v{version}"
+  },
+  "os": [
+    "win32"
+  ],
+  "keywords": [
+    "node-win-pcap",
+    "packet-sniffer",
+    "network",
+    "tcp",
+    "pcap"
+  ],
+  "author": "izure <admin@izure.org>",
+  "license": "MIT"
+}
