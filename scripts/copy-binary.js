@@ -20,7 +20,11 @@ const targetDir = path.resolve(
 const target = path.join(targetDir, `${moduleName}.node`)
 
 // 복사 실행
-fs.mkdirSync(targetDir, { recursive: true })
-fs.copyFileSync(source, target)
+try {
+  fs.mkdirSync(targetDir, { recursive: true })
+  fs.copyFileSync(source, target)
+} catch (e) {
+  console.error(e)
+}
 
 console.log(`[postrebuild] Copied:\n  ${source} →\n  ${target}`)
