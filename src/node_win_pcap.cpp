@@ -49,6 +49,14 @@ napi_value CreateNodeWinPcap(napi_env env, napi_callback_info info) {
         return nullptr;
     }
 
+    // Increase socket buffer size
+    int bufsize = 65536 * 4; // 256KB
+    if (setsockopt(sock, SOL_SOCKET, SO_RCVBUF, (const char*)&bufsize, sizeof(bufsize)) == SOCKET_ERROR) {
+        ThrowWinsockError(env, "Failed to set receive buffer size");
+        closesocket(sock);
+        return nullptr;
+    }
+
     // Bind the socket to the specified local interface. This is required for SIO_RCVALL.
     struct sockaddr_in service;
     service.sin_family = AF_INET;
@@ -200,12 +208,12 @@ napi_value ReceivePacket(napi_env env, napi_callback_info info) {
 
     // Apply filtering
     bool source_match = source_ip_filter_str.empty() || 
-                        (ipHeader.sourceIP.length() >= source_ip_filter_str.length() &&
-                         ipHeader.sourceIP.rfind(source_ip_filter_str, 0) == 0); // startsWith
+                        ipHeader.sourceIP == source_ip_filter_str ||
+                        ipHeader.sourceIP.find(source_ip_filter_str) != std::string::npos;
     
     bool dest_match = dest_ip_filter_str.empty() ||
-                      (ipHeader.destIP.length() >= dest_ip_filter_str.length() &&
-                       ipHeader.destIP.rfind(dest_ip_filter_str, 0) == 0); // startsWith
+                      ipHeader.destIP == dest_ip_filter_str ||
+                      ipHeader.destIP.find(dest_ip_filter_str) != std::string::npos;
 
     if (!source_match || !dest_match) {
         // If filters don't match, return null
