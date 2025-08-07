@@ -208,12 +208,12 @@ napi_value ReceivePacket(napi_env env, napi_callback_info info) {
 
     // Apply filtering
     bool source_match = source_ip_filter_str.empty() || 
-                        ipHeader.sourceIP == source_ip_filter_str ||
-                        ipHeader.sourceIP.find(source_ip_filter_str) != std::string::npos;
+                        (ipHeader.sourceIP.length() >= source_ip_filter_str.length() &&
+                         ipHeader.sourceIP.rfind(source_ip_filter_str, 0) == 0); // startsWith
     
     bool dest_match = dest_ip_filter_str.empty() ||
-                      ipHeader.destIP == dest_ip_filter_str ||
-                      ipHeader.destIP.find(dest_ip_filter_str) != std::string::npos;
+                      (ipHeader.destIP.length() >= dest_ip_filter_str.length() &&
+                       ipHeader.destIP.rfind(dest_ip_filter_str, 0) == 0); // startsWith
 
     if (!source_match || !dest_match) {
         // If filters don't match, return null
