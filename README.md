@@ -88,7 +88,7 @@ setTimeout(() => {
 Captured packets are returned as an object conforming to the following TypeScript interface:
 
 ```typescript
-interface INodeWinPcapPacket {
+interface NodeWinPcapPacket {
   data: Buffer;
   length: number;
   ipHeader: {

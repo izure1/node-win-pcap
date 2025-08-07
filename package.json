@@ -1,6 +1,6 @@
 {
   "name": "node-win-pcap",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Node.js binding for windows packet sniffing",
   "type": "commonjs",
   "main": "./src/index.js",

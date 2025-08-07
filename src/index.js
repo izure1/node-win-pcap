@@ -87,4 +87,3 @@ class NodeWinPcap extends EventEmitter {
 module.exports = {
   NodeWinPcap
 }
-

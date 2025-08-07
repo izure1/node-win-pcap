@@ -1,6 +1,6 @@
 import EventEmitter from 'node:events'
 
-export interface INodeWinPcapPacket {
+export interface NodeWinPcapPacket {
   data: Buffer
   length: number
   ipHeader: {
@@ -14,7 +14,7 @@ export interface INodeWinPcapPacket {
 }
 
 interface NodeWinPcapEvents {
-  packet: [packet: INodeWinPcapPacket]
+  packet: [packet: NodeWinPcapPacket]
   error: [error: Error]
 }
 
