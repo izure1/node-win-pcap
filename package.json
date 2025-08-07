@@ -16,6 +16,7 @@
   "scripts": {
     "install": "node-pre-gyp install --fallback-to-build",
     "rebuild": "node-pre-gyp rebuild --fallback-to-build",
+    "postinstall": "node scripts/copy-binary.js",
     "postrebuild": "node scripts/copy-binary.js",
     "package": "node-pre-gyp package",
     "test": "echo \"Error: no test specified\" && exit 1",
