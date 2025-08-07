@@ -1,6 +1,6 @@
 import EventEmitter from 'node:events'
 
-interface NodeWinPcapPacket {
+export interface INodeWinPcapPacket {
   data: Buffer
   length: number
   ipHeader: {
@@ -14,7 +14,7 @@ interface NodeWinPcapPacket {
 }
 
 interface NodeWinPcapEvents {
-  packet: [packet: NodeWinPcapPacket]
+  packet: [packet: INodeWinPcapPacket]
   error: [error: Error]
 }
 
@@ -51,7 +51,7 @@ export class NodeWinPcap extends EventEmitter<NodeWinPcapEvents> {
    * The filter can be a full IP address (e.g., '192.168.1.1') or a partial address (e.g., '192.168.1.') to match a subnet.
    * Packets will only be emitted if their destination IP starts with this string.
    */
-  start(source_ip_filter = '', dest_ip_filter = ''): void
+  start(source_ip_filter?: string, dest_ip_filter?: string): void
   stop(): void
 }
 

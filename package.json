@@ -1,6 +1,6 @@
 {
   "name": "node-win-pcap",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Node.js binding for windows packet sniffing",
   "type": "commonjs",
   "main": "./src/index.js",
@@ -17,7 +17,7 @@
     "install": "node-pre-gyp install --fallback-to-build",
     "rebuild": "node-pre-gyp rebuild --fallback-to-build",
     "postrebuild": "node scripts/copy-binary.js",
-    "package": "npx node-pre-gyp package",
+    "package": "node-pre-gyp package",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublishOnly": "npm install && node-pre-gyp clean && node-pre-gyp build --compile --target_platform=win32 --target_arch=x64",
     "build-debug": "node-gyp build --debug"
@@ -32,6 +32,7 @@
     "node-gyp": "^11.3.0"
   },
   "files": [
+    "binding.gyp",
     "src/**/*",
     "dist/**/*",
     "scripts/**/*",
@@ -55,5 +56,9 @@
     "pcap"
   ],
   "author": "izure <admin@izure.org>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/izure1/node-win-pcap.git"
+  },
   "license": "MIT"
 }
