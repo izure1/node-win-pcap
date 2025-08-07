@@ -1,14 +1,12 @@
 const fs = require('fs')
 const path = require('path')
 const os = require('os')
-const abi = require('node-abi')
 
 const packageJson = require('../package.json')
 
 // binary 정보 추출
 const binary = packageJson.binary
 const moduleName = binary.module_name
-const nodeAbi = abi.getAbi(process.versions.node, 'node')
 const platform = os.platform()
 const arch = os.arch()
 
@@ -16,7 +14,6 @@ const source = path.resolve(__dirname, `../build/Release/${moduleName}.node`)
 const targetDir = path.resolve(
   __dirname,
   `../${binary.module_path}`
-    // .replace('{node_abi}', 'node-v' + nodeAbi)
     .replace('{platform}', platform)
     .replace('{arch}', arch)
 )
