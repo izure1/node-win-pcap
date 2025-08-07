@@ -16,7 +16,7 @@ const source = path.resolve(__dirname, `../build/Release/${moduleName}.node`)
 const targetDir = path.resolve(
   __dirname,
   `../${binary.module_path}`
-    .replace('{node_abi}', 'node-v' + nodeAbi)
+    // .replace('{node_abi}', 'node-v' + nodeAbi)
     .replace('{platform}', platform)
     .replace('{arch}', arch)
 )
