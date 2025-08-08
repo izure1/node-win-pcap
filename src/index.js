@@ -21,11 +21,12 @@ class NodeWinPcap extends EventEmitter {
     throw new Error('No local IPv4 address found.')
   }
 
-  constructor(ipAddress = NodeWinPcap.GetLocalAddress()) {
+  constructor(ipAddress = NodeWinPcap.GetLocalAddress(), options = {}) {
     super()
     this.socket = null
     this.isListening = false
-    this.ipAddress = ipAddress // Store ipAddress in constructor
+    this.ipAddress = ipAddress
+    this.socketSize = options.socketSize || 65536 * 4 // 256KB default
     this.source_ip_filter = ''
     this.dest_ip_filter = ''
   }
@@ -42,7 +43,8 @@ class NodeWinPcap extends EventEmitter {
     this.dest_ip_filter = dest_ip_filter
 
     try {
-      this.socket = addon.createNodeWinPcap(this.ipAddress) // Use stored ipAddress
+      // Pass the definite socketSize to the addon
+      this.socket = addon.createNodeWinPcap(this.ipAddress, this.socketSize)
       this.isListening = true
       this._listen()
     } catch (error) {

@@ -21,13 +21,13 @@ void ThrowWinsockError(napi_env env, const char* message) {
 // Create a pcap for Windows
 napi_value CreateNodeWinPcap(napi_env env, napi_callback_info info) {
     napi_status status;
-    size_t argc = 1;
-    napi_value args[1];
+    size_t argc = 2;
+    napi_value args[2];
     napi_value result;
 
     status = napi_get_cb_info(env, info, &argc, args, nullptr, nullptr);
-    if (status != napi_ok || argc < 1) {
-        napi_throw_error(env, nullptr, "An IP address string for the local interface is required");
+    if (status != napi_ok || argc < 2) {
+        napi_throw_error(env, nullptr, "IP address and socket size are required");
         return nullptr;
     }
 
@@ -36,6 +36,13 @@ napi_value CreateNodeWinPcap(napi_env env, napi_callback_info info) {
     status = napi_get_value_string_utf8(env, args[0], ip_address, sizeof(ip_address), &ip_address_len);
     if (status != napi_ok) {
         napi_throw_error(env, nullptr, "Failed to parse IP address string");
+        return nullptr;
+    }
+
+    int bufsize;
+    status = napi_get_value_int32(env, args[1], &bufsize);
+    if (status != napi_ok) {
+        napi_throw_error(env, nullptr, "Failed to parse socket size number");
         return nullptr;
     }
 
@@ -49,8 +56,15 @@ napi_value CreateNodeWinPcap(napi_env env, napi_callback_info info) {
         return nullptr;
     }
 
+    // Set socket to non-blocking mode
+    u_long mode = 1; // 1 for non-blocking, 0 for blocking
+    if (ioctlsocket(sock, FIONBIO, &mode) == SOCKET_ERROR) {
+        ThrowWinsockError(env, "Failed to set non-blocking mode");
+        closesocket(sock);
+        return nullptr;
+    }
+
     // Increase socket buffer size
-    int bufsize = 65536 * 4; // 256KB
     if (setsockopt(sock, SOL_SOCKET, SO_RCVBUF, (const char*)&bufsize, sizeof(bufsize)) == SOCKET_ERROR) {
         ThrowWinsockError(env, "Failed to set receive buffer size");
         closesocket(sock);

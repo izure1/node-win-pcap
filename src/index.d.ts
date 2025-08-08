@@ -18,6 +18,17 @@ interface NodeWinPcapEvents {
   error: [error: Error]
 }
 
+interface NodeWinPcapOptions {
+  /**
+   * The size of the socket buffer in bytes.
+   * This option can be used to control the amount of data that can be buffered before processing.
+   * A larger size may help in capturing more packets, especially on busy networks.
+   * Default is `262144` (256 KB).
+   * @default 262144
+   */
+  socketSize?: number
+}
+
 export class NodeWinPcap extends EventEmitter<NodeWinPcapEvents> {
   static readonly Protocol: {
     TCP: 6;
@@ -39,8 +50,9 @@ export class NodeWinPcap extends EventEmitter<NodeWinPcapEvents> {
    * Creates a new NodeWinPcap instance.
    * @param ipAddress The IP address of the network interface to sniff on.
    * If not provided, it attempts to automatically detect a local IPv4 address.
+   * @param options Optional. An object with additional options.
    */
-  constructor(ipAddress?: string)
+  constructor(ipAddress?: string, options?: NodeWinPcapOptions)
 
   /**
    * Starts sniffing packets on the specified network interface.
