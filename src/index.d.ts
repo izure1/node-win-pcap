@@ -27,6 +27,12 @@ interface NodeWinPcapOptions {
    * @default 262144
    */
   socketSize?: number
+  /**
+   * An optional function to be used for scheduling the next packet capture.
+   * This can be used to replace the default `setImmediate` for different scheduling strategies.
+   * @default setImmediate
+   */
+  updateFunction?: (callback: (...args: any[]) => void, ...args: any[]) => any
 }
 
 export class NodeWinPcap extends EventEmitter<NodeWinPcapEvents> {
@@ -45,6 +51,7 @@ export class NodeWinPcap extends EventEmitter<NodeWinPcapEvents> {
   isListening: boolean
   source_ip_filter: string
   dest_ip_filter: string
+  updateFunction: (callback: (...args: any[]) => void, ...args: any[]) => any
 
   /**
    * Creates a new NodeWinPcap instance.

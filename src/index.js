@@ -27,6 +27,7 @@ class NodeWinPcap extends EventEmitter {
     this.isListening = false
     this.ipAddress = ipAddress
     this.socketSize = options.socketSize || 65536 * 4 // 256KB default
+    this.updateFunction = options.updateFunction || setImmediate
     this.source_ip_filter = ''
     this.dest_ip_filter = ''
   }
@@ -53,8 +54,9 @@ class NodeWinPcap extends EventEmitter {
   }
 
   stop() {
-    if (!this.isListening) return
-    
+    if (!this.isListening) {
+      return
+    }
     this.isListening = false
     if (this.socket !== null) {
       addon.closeSocket(this.socket)
@@ -63,26 +65,23 @@ class NodeWinPcap extends EventEmitter {
   }
 
   _listen() {
-    if (!this.isListening) return
-
-    setImmediate(() => {
-      try {
-        // Pass filters to the C++ addon
-        const packet = addon.receivePacket(this.socket, this.source_ip_filter, this.dest_ip_filter)
-        
-        // Only emit if a packet is returned (C++ will handle filtering)
-        if (packet) {
-          // The C++ addon will now return the parsed IP header as part of the packet
-          this.emit('packet', packet)
-        }
-        
-        this._listen() // Continue listening
-      } catch (error) {
-        // Errors might occur (e.g., non-IP packets), so we can choose to ignore or emit.
-        // For now, we'll continue to emit them.
-        this.emit('error', error)
+    if (!this.isListening) {
+      return
+    }
+    try {
+      // Pass filters to the C++ addon
+      const packet = addon.receivePacket(this.socket, this.source_ip_filter, this.dest_ip_filter)
+      // Only emit if a packet is returned (C++ will handle filtering)
+      if (packet) {
+        // The C++ addon will now return the parsed IP header as part of the packet
+        this.emit('packet', packet)
       }
-    })
+      this.updateFunction(() => this._listen()) // Continue listening
+    } catch (error) {
+      // Errors might occur (e.g., non-IP packets), so we can choose to ignore or emit.
+      // For now, we'll continue to emit them.
+      this.emit('error', error)
+    }
   }
 }
 
