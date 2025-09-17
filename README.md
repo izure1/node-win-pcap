@@ -119,6 +119,22 @@ pcap.start(sourceIp, destIp);
 The IP string pattern is similar to JavaScript's `startsWith`.
 For example, to capture packets from the `192.168.0.*` IP range coming to your IP, you would use a `sourceIp` like `'192.168.0.'`.
 
+## updateFunction
+
+By default, `node-win-pcap` uses the `setImmediate` built-in function to check for new packets on every event loop of the main thread.
+This is stable, but if you want to improve performance, you can also use the `setTimeout` built-in function.
+
+```typescript
+const { NodeWinPcap } = require('node-win-pcap');
+
+const ipAddress = NodeWinPcap.GetLocalAddress();
+const pcap = new NodeWinPcap(ipAddress, {
+  updateFunction: (callback) => {
+    setTimeout(callback, 0);
+  }
+});
+```
+
 ## License
 
 [MIT](LICENSE)
