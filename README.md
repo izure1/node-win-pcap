@@ -102,6 +102,23 @@ interface NodeWinPcapPacket {
 }
 ```
 
+## IP Filtering
+
+The `start` method captures packets by specifying the source and destination IP addresses.
+For example, to capture all inbound packets to your computer, use the following:
+
+```typescript
+const { NodeWinPcap } = require('node-win-pcap');
+const pcap = new NodeWinPcap();
+
+const sourceIp = '';
+const destIp = NodeWinPcap.GetLocalAddress();
+pcap.start(sourceIp, destIp);
+```
+
+The IP string pattern is similar to JavaScript's `startsWith`.
+For example, to capture packets from the `192.168.0.*` IP range coming to your IP, you would use a `sourceIp` like `'192.168.0.'`.
+
 ## License
 
 [MIT](LICENSE)
